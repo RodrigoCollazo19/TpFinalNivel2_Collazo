@@ -17,5 +17,10 @@ namespace Desing
             InitializeComponent();
         }
 
+        private void btnMyarticles_Click(object sender, EventArgs e)
+        {
+            FormArticles articlesWindow = new FormArticles();
+            articlesWindow.ShowDialog();
+        }
     }
 }
