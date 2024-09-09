@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using Domain;
 
 namespace DataAccess
 {
-    internal class AccessData
+    public class AccessData
     {
         SqlConnection connection;
         SqlCommand command;
@@ -15,7 +16,7 @@ namespace DataAccess
 
         public AccessData() 
         {
-            connection = new SqlConnection(".\\SQLEXPRESS");
+            connection = new SqlConnection("server=.\\SQLEXPRESS; database=CATALOGO_DB; integrated security=true");
             command = new SqlCommand();
         }
 

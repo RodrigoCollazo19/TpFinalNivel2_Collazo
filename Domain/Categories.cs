@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    internal class Categories
+    public class Categories
     {
         public int Id { get; set; }
         public string Description { get; set; }
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 }

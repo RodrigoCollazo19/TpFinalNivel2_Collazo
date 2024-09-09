@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Business;
+using Domain;
 
 namespace Desing
 {
     public partial class FormArticles : Form
     {
+        List<Article> listA;
         public FormArticles()
         {
             InitializeComponent();
@@ -22,5 +25,33 @@ namespace Desing
 
         }
 
+        private void FormArticles_Load(object sender, EventArgs e)
+        {
+            loader();
+        }
+
+        private void dgvArticles_SelectionChanged(object sender, EventArgs e)
+        {
+            Article selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+            loadImage(selected.Image);
+        }
+        
+        public void loadImage(string image)
+        {
+            try
+            {
+                pboxArticle.Load(image);
+            }
+            catch (Exception)
+            {
+                pboxArticle.Load("https://archive.org/download/placeholder-image/placeholder-image.jpg");
+            }
+        }
+        private void loader()
+        {
+            ArticleBusiness articleBusiness = new ArticleBusiness();
+            listA = articleBusiness.listArticles();
+            dgvArticles.DataSource = listA;
+        }
     }
 }
