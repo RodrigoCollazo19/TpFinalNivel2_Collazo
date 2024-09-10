@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Business;
+using DataAccess;
 using Domain;
 
 namespace Desing
@@ -52,6 +53,20 @@ namespace Desing
             ArticleBusiness articleBusiness = new ArticleBusiness();
             listA = articleBusiness.listArticles();
             dgvArticles.DataSource = listA;
+        }
+
+        private void btnAdd2_Click(object sender, EventArgs e)
+        {
+            AccessData accessData = new AccessData();
+            try
+            {
+                accessData.setQuery("")
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
