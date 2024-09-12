@@ -18,7 +18,7 @@ namespace Business
             AccessData dates = new AccessData(); 
             try
             {
-                dates.setQuery("SELECT A.Id, Codigo, Nombre, A.Descripcion, M.Descripcion Marca, C.Descripcion Categoria, ImagenUrl, Precio FROM ARTICULOS A, CATEGORIAS C, MARCAS M WHERE M.Id = A.IdMarca AND C.Id = A.IdCategoria");
+                dates.setQuery("SELECT A.Id, Codigo, Nombre, A.Descripcion, M.Descripcion Marca, C.Descripcion Categoria, ImagenUrl, Precio, A.IdMarca, A.IdCategoria FROM ARTICULOS A, CATEGORIAS C, MARCAS M WHERE M.Id = A.IdMarca AND C.Id = A.IdCategoria");
                 dates.executeReader();
 
                 while (dates.Reader.Read())
@@ -34,11 +34,12 @@ namespace Business
                     aux.Categories.Description = (string)dates.Reader["Categoria"];
                     //Validacion para valor nullable
                     if (!(dates.Reader["ImagenUrl"] is DBNull))
-                    if (!(dates.Reader["ImagenUrl"] is DBNull))
                         aux.Image = (string)dates.Reader["ImagenUrl"];
-
-                    //aux.Image = (string)dates.Reader["ImagenUrl"];
+                    
+                    
                     aux.Price = (decimal)dates.Reader["Precio"];
+                    aux.Brand.Id = (int)dates.Reader["IdMarca"];
+                    aux.Categories.Id = (int)dates.Reader["IdCategoria"];
                     list.Add(aux);
                 }
             }
@@ -65,6 +66,36 @@ namespace Business
                 dates.setParameter("@IdCategoria", article.Categories.Id);
                 dates.setParameter("@ImagenUrl", article.Image);
                 dates.setParameter("@Precio", article.Price);
+                dates.executeAction();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                dates.closeConnection();
+            }
+        }
+        
+        public void ModifyArticle(Article article)
+        {
+            AccessData dates = new AccessData();
+            try
+            {
+                dates.setQuery("Update ARTICULOS set Codigo = @Codigo, Nombre = @Nombre, Descripcion = @Descripcion, IdMarca = @IdMarca, IdCategoria = @IdCategoria, ImagenUrl = @ImagenUrl, Precio = @Precio Where Id = @Id");
+                dates.setParameter("@Codigo", article.codArticle);
+                dates.setParameter("@Nombre", article.Name);
+                dates.setParameter("@Descripcion", article.Description);
+                dates.setParameter("@IdMarca", article.Brand.Id);
+                dates.setParameter("@IdCategoria", article.Categories.Id);
+                dates.setParameter("@ImagenUrl", article.Image);
+                dates.setParameter("@Precio", article.Price);
+                dates.setParameter("@Id", article.Id);
+
+
+
                 dates.executeAction();
             }
             catch (Exception)

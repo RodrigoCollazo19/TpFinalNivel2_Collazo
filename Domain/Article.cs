@@ -8,7 +8,7 @@ namespace Domain
 {
     public class Article
     {
-        public int Id;
+        public int Id { get; set; }
         public string codArticle {  get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

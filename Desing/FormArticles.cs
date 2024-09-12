@@ -21,11 +21,6 @@ namespace Desing
             InitializeComponent();
         }
 
-        private void btnModify2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void FormArticles_Load(object sender, EventArgs e)
         {
             loader();
@@ -56,6 +51,8 @@ namespace Desing
             {
                 listA = articleBusiness.listArticles();
                 dgvArticles.DataSource = listA;
+                dgvArticles.Columns["Image"].Visible = false;
+                dgvArticles.Columns["Id"].Visible = false;
             }
             catch (Exception)
             {
@@ -69,7 +66,17 @@ namespace Desing
         {
             FormAdd formAdd = new FormAdd();
             formAdd.ShowDialog();
-            //Agregar loader para actualizar en el DGV
+            loader();
+        }
+
+        //Configuracion btn modificar
+        private void btnModify2_Click(object sender, EventArgs e)
+        {
+            Article selected;
+            selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+
+            FormAdd formModify = new FormAdd(selected);
+            formModify.ShowDialog();
             loader();
         }
     }

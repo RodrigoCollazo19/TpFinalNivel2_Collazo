@@ -20,10 +20,12 @@ namespace Desing
             InitializeComponent();
         }
 
+        //Sobrecargar el constructor para recibir un articulo para modificar
         public FormAdd(Article article)
         {
             InitializeComponent();
             this.article = article;
+            Text = "Modify";
         }
 
         private void FormAdd_Load(object sender, EventArgs e)
@@ -32,8 +34,26 @@ namespace Desing
             CategoryBusiness categoryBusiness = new CategoryBusiness();
             try
             {
+                //Modificacion para poder obtener por parametro los desplegables
                 comboboxBrand.DataSource = brandBusiness.Brands();
+                comboboxBrand.ValueMember = "Id";
+                comboboxBrand.DisplayMember = "Description";
                 comboboxCategory.DataSource = categoryBusiness.Categories();
+                comboboxCategory.ValueMember = "Id";
+                comboboxCategory.DisplayMember = "Description";
+
+                //Agregar predeterminados para modificar
+                if (article != null)
+                {
+                    txtboxCode.Text = article.codArticle;
+                    txtboxName.Text = article.Name;
+                    txtboxDescription.Text = article.Description;
+                    txtboxImage.Text = article.Image;
+                    txtboxPrice.Text = article.Price.ToString();
+                    comboboxBrand.SelectedValue = article.Brand.Id;
+                    comboboxCategory.SelectedValue = article.Categories.Id;
+                    loadImage(article.Image);
+                }
             }
             catch (Exception)
             {
@@ -64,16 +84,18 @@ namespace Desing
                     article.Brand = (Brand)comboboxBrand.SelectedItem;
                     article.Categories = (Categories)comboboxCategory.SelectedItem;
                     article.Price = int.Parse(txtboxPrice.Text);
-                    
-                    if(article.Id != 0)
-                    {
-                        MessageBox.Show("Modificado exitosamente");
+
+                //Validacion para agregar o modificar
+                if(article.Id != 0)
+                {
+                    articleBusiness.ModifyArticle(article);
+                    MessageBox.Show("Modificado exitosamente");
                     }
-                    else
-                    {
-                        articleBusiness.AddArticle(article);
-                        MessageBox.Show("Agregado exitosamente");
-                    }
+                else
+                {
+                    articleBusiness.AddArticle(article);
+                    MessageBox.Show("Agregado exitosamente");
+                }
                 
             }
             catch (Exception)
