@@ -37,6 +37,7 @@ namespace Desing
             loadImage(selected.Image);
         }
         
+        
         public void loadImage(string image)
         {
             try
@@ -51,22 +52,25 @@ namespace Desing
         private void loader()
         {
             ArticleBusiness articleBusiness = new ArticleBusiness();
-            listA = articleBusiness.listArticles();
-            dgvArticles.DataSource = listA;
-        }
-
-        private void btnAdd2_Click(object sender, EventArgs e)
-        {
-            AccessData accessData = new AccessData();
             try
             {
-                accessData.setQuery("")
+                listA = articleBusiness.listArticles();
+                dgvArticles.DataSource = listA;
             }
             catch (Exception)
             {
 
                 throw;
             }
+            
+        }
+
+        private void btnAdd2_Click(object sender, EventArgs e)
+        {
+            FormAdd formAdd = new FormAdd();
+            formAdd.ShowDialog();
+            //Agregar loader para actualizar en el DGV
+            loader();
         }
     }
 }
