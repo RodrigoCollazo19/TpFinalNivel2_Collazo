@@ -46,6 +46,27 @@ namespace DataAccess
             get { return reader; }
         }
 
+        //Creacion del metodo para ejecutar los inserts
+        public void executeAction()
+        {
+            command.Connection = connection;
+            try
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        //Creacion del metodo para pasar los parametros
+        public void setParameter(string name, object value)
+        {
+            command.Parameters.AddWithValue(name, value);
+        }
+
         public void closeConnection()
         {
             if (reader != null) 
