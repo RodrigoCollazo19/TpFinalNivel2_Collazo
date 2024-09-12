@@ -78,7 +78,8 @@ namespace Business
                 dates.closeConnection();
             }
         }
-        
+
+
         public void ModifyArticle(Article article)
         {
             AccessData dates = new AccessData();
@@ -106,6 +107,23 @@ namespace Business
             finally
             {
                 dates.closeConnection();
+            }
+        }
+
+        //Metodo eliminar fisico articulo
+        public void DeleteArticle(int Id)
+        {
+            AccessData data =  new AccessData();
+            try
+            {
+                data.setQuery("Delete from ARTICULOS where Id = @Id");
+                data.setParameter("Id", Id);
+                data.executeAction();
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

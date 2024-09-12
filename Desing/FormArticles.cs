@@ -79,5 +79,28 @@ namespace Desing
             formModify.ShowDialog();
             loader();
         }
+
+        //Darle inteligencia al boton delete
+        private void btnDelete2_Click(object sender, EventArgs e)
+        {
+            ArticleBusiness articleBusiness = new ArticleBusiness();
+            Article selected;
+            try
+            {
+                //"Mensaje modal" para asegurar la eliminacion del articulo
+                DialogResult answer = MessageBox.Show("Are you sure to delete this article?", "Removing", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (answer == DialogResult.Yes)
+                {
+                    selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+                    articleBusiness.DeleteArticle(selected.Id);
+                    loader();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
