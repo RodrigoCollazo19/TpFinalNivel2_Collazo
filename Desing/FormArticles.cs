@@ -16,6 +16,10 @@ namespace Desing
     public partial class FormArticles : Form
     {
         List<Article> listA;
+        List<Article> filterList;
+        string filterName;
+        string filterBrand;
+        string filterCategory;
         public FormArticles()
         {
             InitializeComponent();
@@ -23,15 +27,28 @@ namespace Desing
 
         private void FormArticles_Load(object sender, EventArgs e)
         {
+            cbFilterBrand.Items.Add("");
+            cbFilterBrand.Items.Add("Samsung");
+            cbFilterBrand.Items.Add("Apple");
+            cbFilterBrand.Items.Add("Sony");
+            cbFilterBrand.Items.Add("Huawei");
+            cbFilterBrand.Items.Add("Motorola");
+            cbFilterCategory.Items.Add("");
+            cbFilterCategory.Items.Add("Celulares");
+            cbFilterCategory.Items.Add("Televisores");
+            cbFilterCategory.Items.Add("Media");
+            cbFilterCategory.Items.Add("Audio");
             loader();
         }
 
         private void dgvArticles_SelectionChanged(object sender, EventArgs e)
         {
-            Article selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
-            loadImage(selected.Image);
+            if (dgvArticles.CurrentRow != null)
+            {
+                Article selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+                loadImage(selected.Image);
+            }
         }
-        
         
         public void loadImage(string image)
         {
@@ -51,8 +68,7 @@ namespace Desing
             {
                 listA = articleBusiness.listArticles();
                 dgvArticles.DataSource = listA;
-                dgvArticles.Columns["Image"].Visible = false;
-                dgvArticles.Columns["Id"].Visible = false;
+                hideColumns();
             }
             catch (Exception)
             {
@@ -60,6 +76,11 @@ namespace Desing
                 throw;
             }
             
+        }
+        private void hideColumns()
+        {
+            dgvArticles.Columns["Image"].Visible = false;
+            dgvArticles.Columns["Id"].Visible = false;
         }
 
         private void btnAdd2_Click(object sender, EventArgs e)
@@ -102,5 +123,57 @@ namespace Desing
                 throw;
             }
         }
+
+        // Esta función unificada se llamará cuando cambie el filtro de texto, marca o categoría.
+        private void ApplyFilters()
+        {
+            // Inicializa la lista con todos los artículos
+            filterList = listA;
+
+            // Aplica el filtro de nombre si no está vacío
+            if (!string.IsNullOrEmpty(filterName))
+            {
+                filterList = filterList.FindAll(x => x.Name.ToLower().Contains(filterName.ToLower()));
+            }
+
+            // Aplica el filtro de marca si no está vacío
+            if (!string.IsNullOrEmpty(filterBrand))
+            {
+                filterList = filterList.FindAll(x => x.Brand.Description.ToString().Contains(filterBrand));
+            }
+
+            // Aplica el filtro de categoría si no está vacío
+            if (!string.IsNullOrEmpty(filterCategory))
+            {
+                filterList = filterList.FindAll(x => x.Categories.Description.ToString().Contains(filterCategory));
+            }
+
+            // Actualiza la tabla
+            dgvArticles.DataSource = null;
+            dgvArticles.DataSource = filterList;
+            hideColumns();
+        }
+
+        // Evento cuando cambia el texto del filtro de nombre
+        public void txtfilterName_TextChanged(object sender, EventArgs e)
+        {
+            filterName = txtfilterName.Text;
+            ApplyFilters();
+        }
+
+        // Evento cuando se selecciona una nueva marca
+        private void cbFilterBrand_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            filterBrand = cbFilterBrand.SelectedItem.ToString();
+            ApplyFilters();
+        }
+
+        // Evento cuando se selecciona una nueva categoría
+        private void cbFilterCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            filterCategory = cbFilterCategory.SelectedItem.ToString();
+            ApplyFilters();
+        }
+
     }
 }
