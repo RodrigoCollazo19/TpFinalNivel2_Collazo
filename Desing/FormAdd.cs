@@ -34,13 +34,16 @@ namespace Desing
             CategoryBusiness categoryBusiness = new CategoryBusiness();
             try
             {
-                //Modificacion para poder obtener por parametro los desplegables
+                //Modificacion para poder obtener por parametro los desplegables 
                 comboboxBrand.DataSource = brandBusiness.Brands();
                 comboboxBrand.ValueMember = "Id";
                 comboboxBrand.DisplayMember = "Description";
+                comboboxBrand.SelectedIndex = -1;
+
                 comboboxCategory.DataSource = categoryBusiness.Categories();
                 comboboxCategory.ValueMember = "Id";
                 comboboxCategory.DisplayMember = "Description";
+                comboboxCategory.SelectedIndex = -1;
 
                 //Agregar predeterminados para modificar
                 if (article != null)
@@ -55,10 +58,10 @@ namespace Desing
                     loadImage(article.Image);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
 
@@ -73,6 +76,8 @@ namespace Desing
             ArticleBusiness articleBusiness = new ArticleBusiness();
             try
             {
+                if (validateFields())
+                    return;
                 //Condicion para acceder al btn agregar
                 if (article == null)
                     article = new Article();
@@ -80,33 +85,32 @@ namespace Desing
                     article.codArticle = txtboxCode.Text;
                     article.Name = txtboxName.Text;
                     article.Description = txtboxDescription.Text;
+                    article.Price = decimal.Parse(txtboxPrice.Text);   
                     article.Image = txtboxImage.Text;
                     article.Brand = (Brand)comboboxBrand.SelectedItem;
                     article.Categories = (Categories)comboboxCategory.SelectedItem;
-                    article.Price = int.Parse(txtboxPrice.Text);
+                    
 
                 //Validacion para agregar o modificar
                 if(article.Id != 0)
                 {
                     articleBusiness.ModifyArticle(article);
-                    MessageBox.Show("Modificado exitosamente");
-                    }
+                    MessageBox.Show("Successfully modified");
+                }
                 else
                 {
                     articleBusiness.AddArticle(article);
-                    MessageBox.Show("Agregado exitosamente");
+                    MessageBox.Show("Successfully added");
                 }
-                
+
+               
             }
             catch (Exception)
             {
 
                 throw;
             }
-            finally
-            {
-                Close();
-            }
+            Close();
         }
         //Duplicacion del metodo load para previsualizar imagen antes de añadir el articulo
         public void loadImage(string image)
@@ -124,6 +128,32 @@ namespace Desing
         private void txtboxImage_Leave(object sender, EventArgs e)
         {
             loadImage(txtboxImage.Text);
+        }
+        //Metodo para validar campos
+        private bool validateFields()
+        {
+            if (comboboxBrand.SelectedIndex < 0)
+            {
+                lblBrand.ForeColor = Color.Red;
+                return true;
+            }
+                
+            if (comboboxCategory.SelectedIndex < 0)
+            {
+                lblCategory.ForeColor = Color.Red;
+                return true;
+            }
+            return false;
+        }
+        //Metodo para solo numeros
+        private void txtboxPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 48 || e.KeyChar > 58) && e.KeyChar != 8)
+            {
+                lblPrice.ForeColor = Color.Red;
+                lblPriceError.Visible = true;
+                e.Handled = true;
+            }
         }
     }
 }
