@@ -22,5 +22,17 @@ namespace Desing
             FormArticles articlesWindow = new FormArticles();
             articlesWindow.ShowDialog();
         }
+
+        private void btnModify_Click(object sender, EventArgs e)
+        {
+            FormArticles modify = new FormArticles();
+            modify.ShowDialog();
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            FormAdd formAdd = new FormAdd();
+            formAdd.ShowDialog();
+        }
     }
 }

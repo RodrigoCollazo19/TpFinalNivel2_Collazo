@@ -93,12 +93,28 @@ namespace Desing
         //Configuracion btn modificar
         private void btnModify2_Click(object sender, EventArgs e)
         {
-            Article selected;
-            selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+            try
+            {
+                if (dgvArticles.CurrentRow != null)
+                {
+                    Article selected;
+                    selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
 
-            FormAdd formModify = new FormAdd(selected);
-            formModify.ShowDialog();
-            loader();
+                    FormAdd formModify = new FormAdd(selected);
+                    formModify.ShowDialog();
+                    loader();
+                }
+                else
+                {
+                    MessageBox.Show("Please, select article");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
         //Darle inteligencia al boton delete
