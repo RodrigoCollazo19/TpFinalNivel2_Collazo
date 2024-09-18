@@ -124,14 +124,22 @@ namespace Desing
             Article selected;
             try
             {
-                //"Mensaje modal" para asegurar la eliminacion del articulo
-                DialogResult answer = MessageBox.Show("Are you sure to delete this article?", "Removing", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                if (answer == DialogResult.Yes)
+                if (dgvArticles.CurrentRow == null)
                 {
-                    selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
-                    articleBusiness.DeleteArticle(selected.Id);
-                    loader();
+                    MessageBox.Show("Please, select article");
                 }
+                else
+                {
+                    DialogResult answer = MessageBox.Show("Are you sure to delete this article?", "Removing", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    if (answer == DialogResult.Yes && !(dgvArticles.CurrentRow.DataBoundItem == null))
+                    {
+                        selected = (Article)dgvArticles.CurrentRow.DataBoundItem;
+                        articleBusiness.DeleteArticle(selected.Id);
+                        loader();
+                    }
+                }
+                //"Mensaje modal" para asegurar la eliminacion del articulo
+                
             }
             catch (Exception)
             {
@@ -175,6 +183,9 @@ namespace Desing
         {
             filterName = txtfilterName.Text;
             ApplyFilters();
+            lblx1.Visible = false;
+            if (txtfilterName.Text == "")
+                lblx1.Visible = true;
         }
 
         // Evento cuando se selecciona una nueva marca
@@ -191,5 +202,9 @@ namespace Desing
             ApplyFilters();
         }
 
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
